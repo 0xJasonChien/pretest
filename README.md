@@ -50,4 +50,7 @@
     * Build relationships between Order and Product model
 
 * Get creative and Extend anything you want  
- 
+---
+## Submit
+* After receiving this pretest, you have to finish it in 7 days
+* Create a pull request and name it with your name ( 王小明 - 面試 )
