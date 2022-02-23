@@ -54,3 +54,5 @@
 ## Submit
 * After receiving this pretest, you have to finish it in 7 days
 * Create a pull request and name it with your name ( 王小明 - 面試 )
+
+* Feel free to let us know if there is any question: shelby.xiao@omniscientai.com
