@@ -4,7 +4,7 @@
 
 * Clone **pretest** project 
     ```
-    git clone git@github.[com:beBit-tech/pretest.git
+    git clone git@github.com:beBit-tech/pretest.git
     ```
 
 * Checkout **pretest** directory
