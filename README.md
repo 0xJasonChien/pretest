@@ -2,7 +2,7 @@
 ## Setup Environment
 * Download [docker](https://www.docker.com/get-started) and Install
 
-* Fork this **pretest** project to your own repository
+* [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this **pretest** project to your own repository
 
 * Clone **pretest** project from your own repository
     ```
