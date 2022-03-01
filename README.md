@@ -37,7 +37,7 @@
     * Created-time
 
 * Construct **import_order** api ( POST method )
-    * Check access token is valid 
+    * Validate access token from request data
     
         ( accepted token is defined in **api/views.py** )
     * Parse data and Save to corresponding fields
