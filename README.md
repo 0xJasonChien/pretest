@@ -1,10 +1,12 @@
 # Omni Pretest
 ## Setup Environment
-* Download docker and Install
+* Download [docker](https://www.docker.com/get-started) and Install
 
-* Clone **pretest** project 
+* Fork this **pretest** project to your own repository
+
+* Clone **pretest** project from your own repository
     ```
-    git clone git@github.com:beBit-tech/pretest.git
+    git clone https://github.com/[your own account]/pretest.git
     ```
 
 * Checkout **pretest** directory
@@ -46,13 +48,13 @@
 * Replace the statement of checking api access token with a decorator
 
 * Extend Order model
-    * Construct Product model
-    * Build relationships between Order and Product model
+    * Construct **Product** model
+    * Build relationships between **Order** and **Product** model
 
 * Get creative and Extend anything you want  
 ---
 ## Submit
 * After receiving this pretest, you have to finish it in 7 days
-* Create a pull request and name it with your name ( 王小明 - 面試 )
+* Create a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) and name it with your name ( 王小明 - 面試 )
 
 * Feel free to let us know if there is any question: shelby.xiao@omniscientai.com
