@@ -13,6 +13,8 @@ class DatabaseSettings(BaseSettings):
     DB_PORT: str = 'POSTGRES_PORT'
     DB_HOST: str = 'POSTGRES_HOST'
 
+class AuthenticationSettings(BaseSettings):
+    ACCEPTED_TOKEN : tuple[list] = ('omni_pretest_token',)
 
 class SystemSettings(BaseSettings):
     SECRET_KEY: str
@@ -20,7 +22,7 @@ class SystemSettings(BaseSettings):
     ALLOWED_HOSTS: list[str] = ['*']
 
 
-class Settings(DatabaseSettings, SystemSettings):
+class Settings(DatabaseSettings, SystemSettings, AuthenticationSettings):
     model_config = SettingsConfigDict(
         env_file='.env',
         extra='ignore',
