@@ -1,11 +1,10 @@
 from rest_framework import serializers
 
-from pretest.serializers import BaseSerializer
+from .models import Order
 
 
-class ImportOrderSerializer(BaseSerializer):
-    order_number = serializers.IntegerField()
-    amount = serializers.IntegerField()
+class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
-        read_only_fields = (*BaseSerializer.Meta.read_only_fields, 'order_number')
+        model = Order
+        fieldsets = ('order_number', 'total_price')

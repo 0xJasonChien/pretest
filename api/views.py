@@ -3,31 +3,21 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Order
-from .serializers import ImportOrderSerializer
+from pretest.authenticate import token_required
 
-ACCEPTED_TOKEN = ('omni_pretest_token',)
+from .serializers import OrderSerializer
 
 
 @api_view(['POST'])
+@token_required
 def import_order(request: HttpRequest) -> Response:
-    serializer = ImportOrderSerializer(data=request.data)
+    serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid():
+        serializer.save()
         return Response(serializer.validated_data, status=201)
 
-    data = serializer.validated_data
-
-    if data['token'] not in ACCEPTED_TOKEN:
-        return Response(
-            {'detail': 'Invalid token'},
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-
-    order = Order.objects.create(
-        amount=data['amount'],
-    )
-
     return Response(
-        ImportOrderSerializer(data=order).data,
+        {'errors': serializer.errors},
+        status=status.HTTP_400_BAD_REQUEST,
     )

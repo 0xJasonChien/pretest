@@ -13,13 +13,15 @@ class DatabaseSettings(BaseSettings):
     DB_PORT: str = 'POSTGRES_PORT'
     DB_HOST: str = 'POSTGRES_HOST'
 
+
 class AuthenticationSettings(BaseSettings):
-    ACCEPTED_TOKEN : tuple[list] = ('omni_pretest_token',)
+    ACCEPTED_TOKEN: tuple[str] = ('omni_pretest_token',)
+
 
 class SystemSettings(BaseSettings):
-    SECRET_KEY: str
+    SECRET_KEY: str = 'default-key'  # noqa: S105
     DEBUG: bool = True
-    ALLOWED_HOSTS: list[str] = ['*']
+    ALLOWED_HOSTS: tuple[str] = ('*',)
 
 
 class Settings(DatabaseSettings, SystemSettings, AuthenticationSettings):

@@ -1,18 +1,22 @@
+from collections.abc import Callable
 from functools import wraps
-from rest_framework.response import Response
+
 from rest_framework import status
+from rest_framework.request import HttpRequest
+from rest_framework.response import Response
+
 from .config import settings
 
-ACCEPTED_TOKEN = settings.ACCEPTED_TOKEN
 
-def token_required(func):
+def token_required(func: Callable) -> Callable:
     @wraps(func)
-    def wrapper(request, *args, **kwargs):
+    def wrapper(request: HttpRequest, *args: tuple, **kwargs: dict) -> Response:
         token = request.data.get('token')
-        if token not in ACCEPTED_TOKEN:
+        if token not in settings.ACCEPTED_TOKEN:
             return Response(
                 {'detail': 'Invalid token'},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
             )
         return func(request, *args, **kwargs)
+
     return wrapper
