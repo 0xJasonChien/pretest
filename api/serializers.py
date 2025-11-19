@@ -1,11 +1,6 @@
 from rest_framework import serializers
 
-
-class BaseSerializer(serializers.Serializer):
-    token = serializers.CharField()
-
-    class Meta:
-        read_only_fields = ('token',)
+from pretest.serializers import BaseSerializer
 
 
 class ImportOrderSerializer(BaseSerializer):
