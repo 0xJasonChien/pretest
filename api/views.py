@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ ACCEPTED_TOKEN = ('omni_pretest_token',)
 
 
 @api_view(['POST'])
-def import_order(request):
+def import_order(request: HttpRequest) -> Response:
     serializer = ImportOrderSerializer(data=request.data)
 
     if serializer.is_valid():

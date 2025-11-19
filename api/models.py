@@ -1,15 +1,8 @@
 from django.db import models
 
-
-class BaseModel(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=models.UUIDField, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='創建時間')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='最後更新時間')
-
-    class Meta:
-        abstract = True
+from pretest.models import BaseModel
 
 
 class Order(BaseModel):
-    order_number = models.AutoField(unique=True, verbose_name='訂單編號')
+    order_number = models.BigAutoField(primary_key=True)
     total_price = models.PositiveIntegerField(verbose_name='訂單總價')
