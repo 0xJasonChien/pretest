@@ -2,7 +2,7 @@
 # wait-for-postgres.sh
 
 set -e
-  
+
 HOST=$1
 PORT=$POSTGRES_PORT
 
