@@ -4,7 +4,7 @@ from .models import Product
 
 
 class ProductSnapshotSerializer(serializers.Serializer):
-    product_id = serializers.UUIDField(source='product.uuid', read_only=True)
+    uuid = serializers.UUIDField(source='product.uuid')
     name = serializers.CharField(read_only=True)
     quantity = serializers.IntegerField()
     price = serializers.FloatField(read_only=True)
