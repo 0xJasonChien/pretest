@@ -38,11 +38,11 @@ jobs:
         pytest -vv --cov=./ --cov-report=xml
       env:
         SECRET_KEY: unsafe-secret-key-just-for-ci-workflow
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_HOST: ${{ secrets.TESTING_DB_HOST }}
+        DB_PORT: ${{ secrets.TESTING_DB_PORT }}
+        DB_NAME: ${{ secrets.TESTING_DB_NAME }}
+        DB_USER: ${{ secrets.TESTING_DB_USER }}
+        DB_PASSWORD: ${{ secrets.TESTING_DB_PASSWORD }}
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
