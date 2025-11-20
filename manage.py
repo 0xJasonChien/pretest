@@ -4,15 +4,15 @@ import os
 import sys
 
 
-def main():
+def main():  # noqa: ANN201
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pretest.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
+        raise ImportError(  # noqa: TRY003
+            "Couldn't import Django. Are you sure it's installed and "  # noqa: EM101
             "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
+            "forget to activate a virtual environment?",
         ) from exc
     execute_from_command_line(sys.argv)
 

@@ -1,0 +1,52 @@
+name: ci-workflow
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+jobs:
+  python-linter-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Create virtual environment
+      run: python -m venv .venv
+
+    - name: Install dependencies from requirements.txt
+      run: |
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run pre-commit hooks with uv
+      uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: "--all-files"
+
+    - name: Run Unit tests
+      run: |
+        pytest -vv --cov=./ --cov-report=xml
+      env:
+        SECRET_KEY: unsafe-secret-key-just-for-ci-workflow
+        DB_HOST: ${{ secrets.TESTING_DB_HOST }}
+        DB_PORT: ${{ secrets.TESTING_DB_PORT }}
+        DB_NAME: ${{ secrets.TESTING_DB_NAME }}
+        DB_USER: ${{ secrets.TESTING_DB_USER }}
+        DB_PASSWORD: ${{ secrets.TESTING_DB_PASSWORD }}
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
+        fail_ci_if_error: true

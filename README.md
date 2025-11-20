@@ -38,7 +38,7 @@
 
 * Construct **import_order** api ( POST method )
     * Validate access token from request data
-    
+
         ( accepted token is defined in **api/views.py** )
     * Parse data and Save to corresponding fields
 * Construct api unittest
@@ -51,7 +51,7 @@
     * Construct **Product** model
     * Build relationships between **Order** and **Product** model
 
-* Get creative and Extend anything you want  
+* Get creative and Extend anything you want
 ---
 ## Submit
 * After receiving this pretest, you have to finish it in 7 days
