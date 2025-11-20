@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import uuid
 from typing import TYPE_CHECKING
 
 from django.db import models
@@ -49,8 +50,13 @@ class Order(BaseModel):
 
 
 class Product(BaseModel):
-    uuid = models.UUIDField(primary_key=True, verbose_name='商品 UUID')
-    product_name = models.CharField(max_length=100, verbose_name='商品名稱')
+    uuid = models.UUIDField(
+        primary_key=True,
+        verbose_name='商品 UUID',
+        default=uuid.uuid4,
+        editable=False,
+    )
+    name = models.CharField(max_length=100, verbose_name='商品名稱')
     price = models.PositiveIntegerField(verbose_name='商品價格')
 
     @classmethod
@@ -71,7 +77,7 @@ class Product(BaseModel):
         return ProductSnapshot.objects.create(
             order=order,
             product=self,
-            product_name=self.product_name,
+            product_name=self.name,
             price=self.price,
             quantity=quantity,
         )

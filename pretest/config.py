@@ -10,7 +10,7 @@ class DatabaseSettings(BaseSettings):
     DB_NAME: str = 'postgres'
     DB_USER: str = 'postgres'
     DB_PASSWORD: str = 'postgres'  # noqa: S105
-    DB_PORT: str = '7432'
+    DB_PORT: str = '5432'
     DB_HOST: str = 'localhost'
 
 
