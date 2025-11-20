@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from .models import Product
+
 
 class ProductSnapshotSerializer(serializers.Serializer):
     product_id = serializers.UUIDField(source='product.uuid', read_only=True)
@@ -16,3 +18,9 @@ class OrderListSerializer(serializers.Serializer):
 
 class CreateOrderSerializer(serializers.Serializer):
     products = ProductSnapshotSerializer(many=True)
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('uuid', 'name', 'price')

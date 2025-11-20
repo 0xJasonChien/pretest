@@ -24,11 +24,14 @@ jobs:
       with:
         version: "latest"
 
-    - name: Sync uv environment
+    - name: Create virtual environment
+      run: python -m venv .venv
+
+    - name: Install dependencies from requirements.txt
       run: |
-        cd backend
-        uv sync
-        cd ..
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Run pre-commit hooks with uv
       uses: pre-commit/action@v3.0.1
@@ -41,11 +44,11 @@ jobs:
         uv run pytest -vv --cov=./ --cov-report=xml
         cd ..
       env:
-        SECRET_KEY: unsafe-secret-key-for-ci-workflow
+        SECRET_KEY: unsafe-secret-key-just-for-ci-workflow
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     - name: Upload coverage reports to Codecov
