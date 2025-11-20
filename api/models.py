@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 from django.db import models
 
@@ -71,7 +71,7 @@ class Product(BaseModel):
         }
 
     def create_snapshot(
-        self: Product,
+        self: Self,
         order: Order,
         quantity: int,
     ) -> ProductSnapshot:

@@ -19,11 +19,6 @@ jobs:
       with:
         python-version: "3.12"
 
-    - name: Install the latest version of uv
-      uses: astral-sh/setup-uv@v6
-      with:
-        version: "latest"
-
     - name: Create virtual environment
       run: python -m venv .venv
 
@@ -40,9 +35,7 @@ jobs:
 
     - name: Run Unit tests
       run: |
-        cd backend/src
-        uv run pytest -vv --cov=./ --cov-report=xml
-        cd ..
+        pytest -vv --cov=./ --cov-report=xml
       env:
         SECRET_KEY: unsafe-secret-key-just-for-ci-workflow
         DB_HOST: ${{ secrets.DB_HOST }}
