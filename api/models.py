@@ -22,14 +22,15 @@ class Order(BaseModel):
     ) -> tuple[Order, list[ProductSnapshot]]:
         order = Order.objects.create()
         to_purchase_products_uuids = [
-            item['uuid'] for item in serializer.validated_data['products']
+            str(item['product']['uuid'])
+            for item in serializer.validated_data['products']
         ]
         product_uuid_map = Product.get_product_uuid_map(to_purchase_products_uuids)
 
         product_snapshot_list = []
         total_price = 0
-        for product_data in serializer.validated_data:
-            product = product_uuid_map.get(str(product_data['uuid']))
+        for product_data in serializer.validated_data['products']:
+            product = product_uuid_map.get(str(product_data['product']['uuid']))
 
             if not product:
                 msg = 'Product does not exist'
@@ -66,7 +67,7 @@ class Product(BaseModel):
     ) -> dict[str, Product]:
         return {
             str(product.uuid): product
-            for product in Product.objects.filter(uuid__in=to_filter_uuid)
+            for product in cls.objects.filter(uuid__in=to_filter_uuid)
         }
 
     def create_snapshot(

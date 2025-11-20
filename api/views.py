@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from pretest.authentication import token_required
 
-from .models import Order
+from .models import Order, Product
 from .serializers import CreateOrderSerializer, OrderListSerializer, ProductSerializer
 
 
@@ -34,7 +34,7 @@ def import_order(request: HttpRequest) -> Response:
 
 @api_view(['POST'])
 @token_required
-def create_product(request: HttpRequest) -> Response:
+def import_product(request: HttpRequest) -> Response:
     serializer = ProductSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -47,3 +47,12 @@ def create_product(request: HttpRequest) -> Response:
         {'detail': serializer.errors},
         status=status.HTTP_400_BAD_REQUEST,
     )
+
+
+@api_view(['GET'])
+@token_required
+def list_product(request: HttpRequest) -> Response:  # noqa: ARG001
+    queryset = Product.objects.all()
+    response_data = ProductSerializer(queryset, many=True)
+
+    return Response(response_data.data, status=status.HTTP_200_OK)
