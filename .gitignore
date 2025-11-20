@@ -7,4 +7,4 @@ data/
 coverage.*
 *.tfstate
 *.tfstate.*
-infra/.terraform/*
+infra/.terraform/
