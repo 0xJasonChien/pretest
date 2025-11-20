@@ -8,5 +8,4 @@ coverage.*
 *.tfstate
 *.tfstate.*
 infra/.terraform/
-.terraform/
 *.tfstate
