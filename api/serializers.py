@@ -3,8 +3,12 @@ from rest_framework import serializers
 from .models import Product
 
 
+class ProductSerializer(serializers.Serializer):
+    uuid = serializers.UUIDField()
+
+
 class ProductSnapshotSerializer(serializers.Serializer):
-    uuid = serializers.UUIDField(source='product.uuid')
+    product = ProductSerializer()
     name = serializers.CharField(read_only=True)
     quantity = serializers.IntegerField()
     price = serializers.FloatField(read_only=True)
