@@ -5,6 +5,7 @@ resource "aws_db_instance" "db" {
     engine               = "postgres"
     engine_version       = "14"
     instance_class       = "db.t4g.micro"
+    db_name = var.db_name
     username             = var.db_username
     password             = var.db_password
     publicly_accessible  = false
