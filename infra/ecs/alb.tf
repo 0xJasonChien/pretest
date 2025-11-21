@@ -1,3 +1,7 @@
+module "vpc" {
+    source = "../vpc"
+}
+
 resource "aws_lb" "lb" {
     name               = "${var.project_name}-alb"
     internal           = false

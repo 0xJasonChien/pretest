@@ -6,10 +6,6 @@ variable "project_name" {
     default = "beBit-pretest"
 }
 
-variable "docker_image" {
-    description = "Docker image URI in ECR"
-    type        = string
-}
 
 variable "db_username" {
     description = "Database username"

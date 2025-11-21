@@ -10,12 +10,3 @@ resource "aws_db_instance" "db" {
     publicly_accessible  = false
     skip_final_snapshot  = true
 }
-
-resource "aws_db_database" "project_db" {
-    name     = var.db_name
-    instance = aws_db_instance.db.id
-}
-
-output "endpoint" {
-    value = aws_db_instance.db.endpoint
-}
