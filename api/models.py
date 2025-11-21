@@ -31,11 +31,12 @@ class Order(BaseModel):
         created_product_list = []
         total_price = 0
         for product_data in serializer.validated_data['products']:
-            product = product_uuid_map.get(str(product_data['product']['uuid']))
+            product_uuid = str(product_data['product']['uuid'])
+            product = product_uuid_map.get(product_uuid)
 
             if not product:
-                msg = 'Product does not exist'
-                raise ValueError(msg)
+                msg = f'Product {product_uuid} does not exist'
+                raise Product.DoesNotExist(msg)
 
             quantity = product_data['quantity']
 
