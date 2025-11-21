@@ -1,0 +1,112 @@
+name: cd-workflow
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+
+jobs:
+    initialize-terraform:
+        name: "Terraform"
+        runs-on: ubuntu-latest
+        outputs:
+            # 將 ECR URL 傳給下一個 Job
+            ecr_url: ${{ steps.tf-output.outputs.ecr_url }}
+
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3.1.2
+              with:
+                  terraform_version: "1.14.0"
+
+            - name: Terraform Init
+              run: terraform init
+
+            - name: Terraform Format
+              run: terraform fmt -check
+
+            - name: Terraform Validate
+              run: terraform validate
+
+            - name: Terraform Plan
+              run: terraform plan -no-color -input=false
+
+            - name: Initialize ECR
+              run: |
+                  terraform apply \
+                  -var="project_name=${{vars.PROJECT_NAME}}" \
+                  -target=module.ecr \
+                  --auto-approve \
+                  -input=false
+
+    build-and-push-image:
+        name: "Build and Push Image"
+        runs-on: ubuntu-latest
+        needs: initialize-terraform
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Build and Push
+              env:
+                  REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  REPOSITORY: ${{ vars.PROJECT_NAME }}
+                  IMAGE_TAG: ${{ github.sha }}
+              run: |
+                  docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+                  docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+                  # 更新 latest 標籤
+                  docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
+                  docker push $REGISTRY/$REPOSITORY:latest
+
+    deploy-to-cloud:
+        name: "Deploy to Cloud"
+        needs: build-and-push-image
+        runs-on: ubuntu-latest
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3.1.2
+              with:
+                terraform_version: "1.14.0"
+
+            - name: Terraform Init
+              run: terraform init
+
+            - name: Terraform Full Apply
+              run: |
+                terraform apply \
+                -auto-approve \
+                -input=false \
+                -var="project_name=${{vars.PROJECT_NAME}}" \
+                -var="db_name=${{secrets.DB_NAME}}" \
+                -var="db_username=${{secrets.DB_USER}}" \
+                -var="db_password=${{secrets.DB_PASSWORD}}" \
