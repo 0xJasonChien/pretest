@@ -1,11 +1,10 @@
 variable "aws_region" {
-  default = "ap-southeast-1"
+  type = string
 }
 
 variable "project_name" {
-  default = "beBit-pretest"
+  type = string
 }
-
 
 variable "db_username" {
   description = "Database username"

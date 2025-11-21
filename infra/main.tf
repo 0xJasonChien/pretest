@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     bucket       = "jason-deployment-terraform-state"
     key          = "beBit/terraform.tfstate"
-    region       = "ap-southeast-1"
+    region       = var.aws_region
     encrypt      = true
     use_lockfile = true
   }
