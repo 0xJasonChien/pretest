@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 from pretest.config import settings
 
-from .models import Product
+from .models import Order, Product
 
 
 # Create your tests here.
@@ -26,6 +26,20 @@ class OrderTestCase(APITestCase):
                 {'product': {'uuid': None}, 'quantity': 2},
             ],
         }
+
+    def test_import_order_success(self: Self) -> None:
+        url = reverse('import_order')
+
+        self.test_import_product_success()
+        product = Product.objects.get()
+
+        self.order_data['products'][0]['product']['uuid'] = str(product.uuid)
+        data = {**self.order_data, 'token': self.valid_token}
+
+        response = self.client.post(url, data, format='json')
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert Order.objects.count() == 1
 
     def test_import_product_success(self: Self) -> None:
         url = reverse('import_product')
