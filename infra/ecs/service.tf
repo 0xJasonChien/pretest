@@ -1,13 +1,13 @@
 resource "aws_security_group" "ecs_sg" {
     name        = "${var.project_name}-ecs-sg"
     description = "ECS security group"
-    vpc_id      = module.vpc.vpc_id
+    vpc_id      = var.vpc_id
 
     ingress {
-        from_port   = 80
-        to_port     = 80
+        from_port   = 8001
+        to_port     = 8001
         protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+        security_groups = [aws_security_group.alb_sg.id] # only allow for ALB
     }
 
     egress {
@@ -26,7 +26,7 @@ resource "aws_ecs_service" "backend" {
     desired_count   = 1
 
     network_configuration {
-        subnets          = module.vpc.private_subnets
+        subnets          = var.public_subnets_ids
         security_groups  = [aws_security_group.ecs_sg.id]
         assign_public_ip = true
     }

@@ -1,5 +1,5 @@
 resource "aws_db_instance" "db" {
-    identifier           = var.project_name
+    identifier           = replace(lower(var.project_name), "_", "-")
     allocated_storage    = 20
     storage_type         = "gp2"
     engine               = "postgres"

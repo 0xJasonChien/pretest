@@ -1,16 +1,3 @@
-module "rds" {
-    source = "../rds"
-    db_username  = var.db_username
-    db_password  = var.db_password
-    db_name      = var.db_name
-    project_name = var.project_name
-}
-
-module "ecr" {
-    source = "../ecr"
-    project_name = var.project_name
-}
-
 resource "aws_ecs_task_definition" "task_definition" {
     family                   = var.project_name
     requires_compatibilities = ["FARGATE"]
@@ -21,7 +8,7 @@ resource "aws_ecs_task_definition" "task_definition" {
     container_definitions = jsonencode([
         {
         name  = "backend"
-        image = module.ecr.ecr_repository_url
+        image = var.ecr_repository_url
         essential = true
         portMappings = [
             {
@@ -32,7 +19,7 @@ resource "aws_ecs_task_definition" "task_definition" {
         environment = [
             {
             name  = "DB_HOST"
-            value = module.rds.endpoint
+            value = var.db_endpoint
             },
             {
             name  = "DB_PORT"
