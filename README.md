@@ -1,60 +1,159 @@
 # Omni Pretest
+### Project Overview
+
 ## Setup Environment
-* Download [docker](https://www.docker.com/get-started) and Install
-
-* [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this **pretest** project to your own repository
-
-* Clone **pretest** project from your own repository
+1. **Configure Environment Variables** \
+   Rename the example environment file to active configuration:
+   ```bash
+    mv .env.example .env
     ```
-    git clone https://github.com/[your own account]/pretest.git
-    ```
-
-* Checkout **pretest** directory
-    ```
-    cd pretest
-    ```
-
-* Start docker container
+2. **Start Services Launch the Docker containers:**
     ```
     docker-compose up
     ```
+3. **Access the System** \
+    Open your browser and navigate to: http://localhost:8008
 
-* Enter activated **pretest-web-1** container
+## Unit Testing
+本專案使用 Django REST Framework 的 `APITestCase` 進行單元測試，並整合 **Codecov** 與 **GitHub Actions** 進行程式碼覆蓋率 (Code Coverage) 追蹤。
+
+[![codecov](https://codecov.io/gh/0xJasonChien/pretest/graph/badge.svg?token=HIX03BX65F)](https://codecov.io/gh/0xJasonChien/pretest)
+
+### 測試範圍
+測試代碼主要涵蓋以下核心邏輯：
+- **API Endpoints**: 驗證 `import-order` 與 `import-product` 的 HTTP 狀態碼與回應資料。
+- **Authentication**: 測試 Token 驗證機制（Valid vs Invalid Token）。
+- **Business Logic**: 驗證資料庫是否正確建立 `Order` 與 `Product` 關聯。
+
+### CI/CD Integration
+本專案使用 GitHub Actions 進行自動化整合測試。當 Pull Request 建立或代碼 Push 至 `main` 分支時，將觸發 `ci-workflow`。
+
+流程包含以下步驟：
+1.  **Environment Setup**: 在 Ubuntu 環境下建立 Python 3.12 虛擬環境，並安裝 `requirements.txt` 依賴。
+2.  **Quality Check**: 使用 **Pre-commit hooks** 自動檢查代碼格式與品質 (Linting)。
+3.  **Unit Testing**: 使用 `pytest` 執行單元測試，並搭配 `--cov` 參數生成 XML 格式的覆蓋率報告。
+    * *注意：CI 過程中使用 GitHub Secrets 注入測試資料庫的連線資訊 (DB_HOST, DB_USER...等)。*
+4.  **Coverage Upload**: 自動將測試覆蓋率報告 (`coverage.xml`) 上傳至 **Codecov**，並更新 README 上的 Badge 狀態。
+
+## API 說明
+### 1. 匯入訂單 (Import Order)
+- **Endpoint:** `POST /api/import-order/`
+- **Feature:** 匯入訂單
+- **Tags:** `import-order`
+- **Request Body:**
+  - **Content Types:** `application/json`
+  - **Schema:** `CreateOrder`
+    ```json
+    {
+      "products": [
+        {
+          "product": {
+            "uuid": "string",
+            "name": "string",
+            "price": 100
+          },
+          "name": "string",
+          "quantity": 1,
+          "price": 100
+        }
+      ]
+    }
     ```
-    docker exec -it pretest-web-1 bash
+- **Response `201`:** 成功建立
+  - **Schema:** `OrderList`
+    ```json
+    {
+      "order_number": 1,
+      "total_price": 100,
+      "product": [
+        {
+          "product": {
+            "uuid": "string",
+            "name": "string",
+            "price": 100
+          },
+          "name": "string",
+          "quantity": 1,
+          "price": 100
+        }
+      ]
+    }
     ```
-    Note:
-
-    * This container codebase is connected to **pretest** project local codebase
-    * If you need to migrate migration files or test testcases, make sure do it in **pretest-web-1** container
----
-## Requirements
-* Construct **Order** Model in **api** app
-
-    The below information is necessary in **Order** model:
-    * Order-number
-    * Total-price
-    * Created-time
-
-* Construct **import_order** api ( POST method )
-    * Validate access token from request data
-
-        ( accepted token is defined in **api/views.py** )
-    * Parse data and Save to corresponding fields
-* Construct api unittest
 
 ---
-## Advanced Requirements ( optional )
-* Replace the statement of checking api access token with a decorator
 
-* Extend Order model
-    * Construct **Product** model
-    * Build relationships between **Order** and **Product** model
+### 2. 匯入商品 (Import Product)
+- **Endpoint:** `POST /api/import-product/`
+- **Feature:** 匯入商品
+- **Tags:** `import-product`
+- **Request Body:**
+  - **Content Types:** `application/json`
+  - **Schema:** `Product`
+    ```json
+    {
+      "uuid": "string",
+      "name": "商品名稱",
+      "price": 100
+    }
+    ```
+- **Response 201:** 成功建立
+  - **Schema:** `Product`
+    ```json
+    {
+      "uuid": "string",
+      "name": "商品名稱",
+      "price": 100
+    }
+    ```
 
-* Get creative and Extend anything you want
 ---
-## Submit
-* After receiving this pretest, you have to finish it in 7 days
-* Create a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) and name it with your name (using your Chinese and English name as provided on your resume) ( 王小明(Apple) - 面試 )
 
-* Feel free to let us know if there is any question: sophie.lee@bebit-tech.com
+### 3. 商品列表 (List Product)
+- **Endpoint:** `GET /api/list-product/`
+- **Feature:** 取得所有商品列表
+- **Tags:** `list-product`
+- **Response `200`:** 成功取得
+  - **Schema:** 陣列 `Product`
+    ```json
+    [
+      {
+        "uuid": "string",
+        "name": "商品名稱",
+        "price": 100
+      }
+    ]
+    ```
+
+## Database Diagram
+```mermaid
+erDiagram
+    ORDER {
+        bigint order_number PK "訂單編號"
+        int total_price "訂單總價"
+        datetime created_at
+        datetime updated_at
+    }
+
+    PRODUCT {
+        uuid uuid PK "商品 UUID"
+        string name "商品名稱"
+        int price "商品價格"
+        datetime created_at
+        datetime updated_at
+    }
+
+    PRODUCTSNAPSHOT {
+        int id PK
+        int order_id FK "訂單"
+        uuid product_id FK "商品 (nullable)"
+        string product_name "商品名稱 (snapshot)"
+        int price "商品價格 (snapshot)"
+        int quantity "商品數量"
+        datetime created_at
+        datetime updated_at
+    }
+
+    ORDER ||--o{ PRODUCTSNAPSHOT : contains
+    PRODUCT ||--o{ PRODUCTSNAPSHOT : snapshot_of
+
+```
