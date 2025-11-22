@@ -124,7 +124,18 @@
     ]
     ```
 
-## Database Diagram
+## 資料庫設計思路
+1. **Snapshot Pattern** \
+    為了防止商品後續改名或調價影響歷史訂單紀錄，採用了 Snapshot Pattern \
+    即使未來 Product 被修改或刪除（設為 `SET_NULL`），使用者購買的歷史訂單的金額不會受影響，確保資料的完整性
+2. **寫入效能優化** \
+    在 `create_order` 的實作中，考量到批量建立訂單明細的效能:
+     - **避免 N+1 Query**：不使用迴圈逐筆查詢資料庫，而是先收集所有需要的 UUID，透過 `get_product_uuid_map` 一次性撈取並轉為 Hash Map。
+3. **資料庫鍵值設計策略**
+     - **Product (UUID)**：對外公開的商品資源使用 UUID，避免流水號被遍歷預測，提升安全性。
+     - **Order (BigAutoField)**：內部訂單使用整數流水號，在後台管理與溝通上較為直觀，且索引效能較佳。
+
+### Database Diagram
 ```mermaid
 erDiagram
     ORDER {
