@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -122,4 +123,5 @@ STATIC_URL = '/static/'
 # DRF settings
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'pretest.exception_handler.custom_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
