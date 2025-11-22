@@ -20,17 +20,17 @@
 [![codecov](https://codecov.io/gh/0xJasonChien/pretest/graph/badge.svg?token=HIX03BX65F)](https://codecov.io/gh/0xJasonChien/pretest)
 
 ### 測試範圍
-測試代碼主要涵蓋以下核心邏輯：
+測試主要涵蓋以下核心邏輯：
 - **API Endpoints**: 驗證 `import-order` 與 `import-product` 的 HTTP 狀態碼與回應資料。
 - **Authentication**: 測試 Token 驗證機制（Valid vs Invalid Token）。
 - **Business Logic**: 驗證資料庫是否正確建立 `Order` 與 `Product` 關聯。
 
 ### CI/CD Integration
-本專案使用 GitHub Actions 進行自動化整合測試。當 Pull Request 建立或代碼 Push 至 `main` 分支時，將觸發 `ci-workflow`。
+本專案使用 GitHub Actions 進行自動化整合測試。當 Pull Request 建立或 Push 至 `main` 分支時，將觸發 `ci-workflow`。
 
 流程包含以下步驟：
 1.  **Environment Setup**: 在 Ubuntu 環境下建立 Python 3.12 虛擬環境，並安裝 `requirements.txt` 依賴。
-2.  **Quality Check**: 使用 **Pre-commit hooks** 自動檢查代碼格式與品質 (Linting)。
+2.  **Quality Check**: 使用 **Pre-commit hooks** 自動檢查程式碼格式和品質 (Linting)。
 3.  **Unit Testing**: 使用 `pytest` 執行單元測試，並搭配 `--cov` 參數生成 XML 格式的覆蓋率報告。
     * *注意：CI 過程中使用 GitHub Secrets 注入測試資料庫的連線資訊 (DB_HOST, DB_USER...等)。*
 4.  **Coverage Upload**: 自動將測試覆蓋率報告 (`coverage.xml`) 上傳至 **Codecov**，並更新 README 上的 Badge 狀態。
