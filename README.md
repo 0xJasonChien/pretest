@@ -42,19 +42,15 @@
 - **Tags:** `import-order`
 - **Request Body:**
   - **Content Types:** `application/json`
-  - **Schema:** `CreateOrder`
+  - **Schema:**
     ```json
     {
       "products": [
         {
           "product": {
             "uuid": "string",
-            "name": "string",
-            "price": 100
           },
-          "name": "string",
           "quantity": 1,
-          "price": 100
         }
       ]
     }
@@ -88,10 +84,9 @@
 - **Tags:** `import-product`
 - **Request Body:**
   - **Content Types:** `application/json`
-  - **Schema:** `Product`
+  - **Schema:**
     ```json
     {
-      "uuid": "string",
       "name": "商品名稱",
       "price": 100
     }
