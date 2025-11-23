@@ -29,11 +29,10 @@
 本專案使用 GitHub Actions 進行自動化整合測試。當 Pull Request 建立或 Push 至 `main` 分支時，將觸發 `ci-workflow`。
 
 流程包含以下步驟：
-1.  **Environment Setup**: 在 Ubuntu 環境下建立 Python 3.12 虛擬環境，並安裝 `requirements.txt` 依賴。
+1.  **Environment Setup**: 在 Ubuntu 環境下建立 Python 3.12 虛擬環境，並安裝 `requirements.txt`。
 2.  **Quality Check**: 使用 **Pre-commit hooks** 自動檢查程式碼格式和品質 (Linting)。
 3.  **Unit Testing**: 使用 `pytest` 執行單元測試，並搭配 `--cov` 參數生成 XML 格式的覆蓋率報告。
-    * *注意：CI 過程中使用 GitHub Secrets 注入測試資料庫的連線資訊 (DB_HOST, DB_USER...等)。*
-4.  **Coverage Upload**: 自動將測試覆蓋率報告 (`coverage.xml`) 上傳至 **Codecov**，並更新 README 上的 Badge 狀態。
+4.  **Coverage Upload**: 自動將測試覆蓋率報告 (`coverage.xml`) 上傳至 **Codecov**。
 
 ## API 說明
 ### 1. 匯入訂單 (Import Order)
