@@ -67,8 +67,12 @@ jobs:
             - name: Extract ECR URL Output
               id: tf-output
               run: |
-                ECR_URL=$(terraform output -raw ecr_repository_url)
-                echo "ecr_url=$ECR_URL" >> $GITHUB_OUTPUT
+                  ECR_URL=$(aws ecr describe-repositories \
+                  --repository-names ${{ vars.PROJECT_NAME }} \
+                  --query 'repositories[0].repositoryUri' \
+                  --output text)
+
+                  echo "ecr_url=$ECR_URL" >> $GITHUB_OUTPUT
 
     build-and-push-image:
         name: "Build and Push Image"
