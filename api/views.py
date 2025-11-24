@@ -31,7 +31,7 @@ def import_order(request: HttpRequest) -> Response:
     response_data = {
         'order_number': created_order.order_number,
         'total_price': created_order.total_price,
-        'product': created_product_list,
+        'products': created_product_list,
     }
     created_data = OrderListSerializer(response_data)
 

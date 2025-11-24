@@ -19,7 +19,7 @@ class OrderDetailSerializer(serializers.Serializer):
 class OrderListSerializer(serializers.Serializer):
     order_number = serializers.IntegerField(read_only=True)
     total_price = serializers.IntegerField()
-    product = OrderDetailSerializer(many=True, read_only=True)
+    products = OrderDetailSerializer(many=True, read_only=True)
 
 
 class CreateOrderSerializer(serializers.Serializer):

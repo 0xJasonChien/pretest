@@ -59,7 +59,7 @@
     {
       "order_number": 1,
       "total_price": 100,
-      "product": [
+      "products": [
         {
           "product": {
             "uuid": "string",
