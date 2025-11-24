@@ -9,14 +9,14 @@ terraform {
   backend "s3" {
     bucket       = "jason-deployment-terraform-state"
     key          = "beBit/terraform.tfstate"
-    region       = var.aws_region
+    region       = "ap-southeast-1"
     encrypt      = true
     use_lockfile = true
   }
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = "ap-southeast-1"
 }
 
 module "vpc" {
