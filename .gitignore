@@ -5,3 +5,7 @@ data/
 .env
 .coverage
 coverage.*
+*.tfstate
+*.tfstate.*
+infra/.terraform/
+.terraform.lock.hcl
