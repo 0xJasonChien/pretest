@@ -80,6 +80,12 @@ jobs:
                   docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
                   docker push $REGISTRY/$REPOSITORY:latest
 
+            - name: Extract ECR URL Output
+              id: tf-output
+              run: |
+                ECR_URL=$(terraform output -raw ecr_repository_url)
+                echo "ecr_url=$ECR_URL" >> $GITHUB_OUTPUT
+
     deploy-to-cloud:
         name: "Deploy to Cloud"
         needs: build-and-push-image
