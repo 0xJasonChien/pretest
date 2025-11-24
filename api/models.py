@@ -20,34 +20,37 @@ class Order(BaseModel):
         cls: Order,
         serializer: CreateOrderSerializer,
     ) -> tuple[Order, list[ProductSnapshot]]:
-        order = Order.objects.create()
+        order = cls.objects.create()
+
         to_purchase_products_uuids = [
             str(item['product']['uuid'])
             for item in serializer.validated_data['products']
         ]
         product_uuid_map = Product.get_product_uuid_map(to_purchase_products_uuids)
 
-        product_snapshot_list = []
+        created_product_list = []
         total_price = 0
         for product_data in serializer.validated_data['products']:
-            product = product_uuid_map.get(str(product_data['product']['uuid']))
+            product_uuid = str(product_data['product']['uuid'])
+            product = product_uuid_map.get(product_uuid)
 
             if not product:
-                msg = 'Product does not exist'
-                raise ValueError(msg)
+                msg = f'Product {product_uuid} does not exist'
+                raise Product.DoesNotExist(msg)
 
             quantity = product_data['quantity']
+
             product_snapshot = product.create_snapshot(
                 order=order,
                 quantity=quantity,
             )
             total_price += product_snapshot.price * quantity
-            product_snapshot_list.append(product_snapshot)
+            created_product_list.append(product_snapshot)
 
         order.total_price = total_price
         order.save()
 
-        return order, product_snapshot_list
+        return order, created_product_list
 
 
 class Product(BaseModel):
