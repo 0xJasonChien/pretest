@@ -1,3 +1,9 @@
+
+resource "aws_db_subnet_group" "default" {
+    name       = "${var.project_name}-db-subnet-group"
+    subnet_ids = var.private_subnet_ids
+}
+
 resource "aws_db_instance" "db" {
     identifier           = replace(lower(var.project_name), "_", "-")
     allocated_storage    = 20
@@ -10,4 +16,6 @@ resource "aws_db_instance" "db" {
     password             = var.db_password
     publicly_accessible  = false
     skip_final_snapshot  = true
+
+    db_subnet_group_name = aws_db_subnet_group.default.name
 }
