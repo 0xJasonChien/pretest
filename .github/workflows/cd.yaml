@@ -92,7 +92,7 @@ jobs:
                   REPOSITORY: ${{ vars.PROJECT_NAME }}
                   IMAGE_TAG: ${{ github.sha }}
               run: |
-                  docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+                  docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ../
                   docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
                   # 更新 latest 標籤
