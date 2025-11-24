@@ -39,6 +39,14 @@ resource "aws_ecs_task_definition" "task_definition" {
             value = var.db_name
             }
         ]
+        logConfiguration = {
+            logDriver = "awslogs"
+            options = {
+                "awslogs-group"         = "/ecs/${var.project_name}"
+                "awslogs-region"        = "ap-southeast-1"
+                "awslogs-stream-prefix" = "ecs"
+                }
+        }
         }
     ])
 }
