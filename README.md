@@ -1,5 +1,4 @@
 # Omni Pretest
-### Project Overview
 
 ## Setup Environment
 1. **Configure Environment Variables** \
@@ -60,7 +59,7 @@
     {
       "order_number": 1,
       "total_price": 100,
-      "product": [
+      "products": [
         {
           "product": {
             "uuid": "string",

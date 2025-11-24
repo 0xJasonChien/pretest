@@ -11,7 +11,9 @@ from .config import settings
 def token_required(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(request: HttpRequest, *args: tuple, **kwargs: dict) -> Response:
-        token = request.data.get('token', None)
+        auth_header = request.headers.get('Authorization')
+        token = auth_header.split(' ')[1] if auth_header else None
+
         if not token or token not in settings.ACCEPTED_TOKEN:
             return Response(
                 {'detail': 'Invalid token'},
