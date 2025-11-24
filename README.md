@@ -8,7 +8,7 @@
     ```
 2. **Start Services Launch the Docker containers:**
     ```
-    docker-compose up
+    docker compose up
     ```
 3. **Access the System** \
     Open your browser and navigate to: http://localhost:8008
