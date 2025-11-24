@@ -35,7 +35,7 @@ class OrderTestCase(APITestCase):
 
         self.order_data['products'][0]['product']['uuid'] = str(product.uuid)
 
-        self.client.credentials(HTTP_AUTHORIZATION=self.valid_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.valid_token}')
         response = self.client.post(url, self.order_data, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
@@ -44,7 +44,7 @@ class OrderTestCase(APITestCase):
     def test_import_product_success(self: Self) -> None:
         url = reverse('import_product')
 
-        self.client.credentials(HTTP_AUTHORIZATION=self.valid_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.valid_token}')
         response = self.client.post(url, self.product_data, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
@@ -54,7 +54,7 @@ class OrderTestCase(APITestCase):
     def test_import_product_invalid_token(self: Self) -> None:
         url = reverse('import_product')
 
-        self.client.credentials(HTTP_AUTHORIZATION=self.invalid_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.invalid_token}')
         response = self.client.post(url, self.product_data, format='json')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
