@@ -1,5 +1,4 @@
 # Omni Pretest
-### Project Overview
 
 ## Setup Environment
 1. **Configure Environment Variables** \
