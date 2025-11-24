@@ -44,7 +44,14 @@ jobs:
               run: terraform validate
 
             - name: Terraform Plan
-              run: terraform plan -no-color -input=false
+              run: |
+                terraform plan \
+                -no-color \
+                -input=false \
+                -var="project_name=${{vars.PROJECT_NAME}}" \
+                -var="db_name=${{secrets.DB_NAME}}" \
+                -var="db_username=${{secrets.DB_USER}}" \
+                -var="db_password=${{secrets.DB_PASSWORD}}"
 
             - name: Initialize ECR
               run: |
@@ -125,5 +132,4 @@ jobs:
                 -var="project_name=${{vars.PROJECT_NAME}}" \
                 -var="db_name=${{secrets.DB_NAME}}" \
                 -var="db_username=${{secrets.DB_USER}}" \
-                -var="db_password=${{secrets.DB_PASSWORD}}" \
-                -var="ecr_repository_url=${{ needs.initialize-terraform.outputs.ecr_url }}"
+                -var="db_password=${{secrets.DB_PASSWORD}}"
