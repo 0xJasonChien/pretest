@@ -20,8 +20,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /code/
 
 # Make the startup script executable.
-RUN chmod +x /code/run_web.cloud.sh
+RUN chmod +x /code/run_web.dev.sh
 
 # Set the command to run when the container starts.
 # This was the missing piece that caused the container to exit immediately.
-CMD ["/code/run_web.cloud.sh"]
+CMD ["/code/run_web.dev.sh"]

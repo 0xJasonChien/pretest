@@ -4,7 +4,7 @@
 set -e
 
 # Use DB_HOST and DB_PORT from the environment variables set in the ECS task definition
-HOST=$DB_HOST
+HOST=${DB_HOST:-db}
 PORT=${DB_PORT:-5432} # Default to 5432 if DB_PORT is not set
 
 # The `pg_isready` command is part of the `postgresql-client` package installed in the Dockerfile.
