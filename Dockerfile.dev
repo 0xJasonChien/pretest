@@ -1,0 +1,27 @@
+FROM python:3.12-slim
+
+# Set environment variables to prevent Python from writing .pyc files and to keep output unbuffered.
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies. `postgresql-client` is needed for `pg_isready`.
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory inside the container.
+WORKDIR /code
+
+# Copy and install Python dependencies.
+# Separating this from the main code copy allows Docker to cache this layer,
+# speeding up builds if requirements haven't changed.
+COPY requirements.txt /code/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code into the container.
+COPY . /code/
+
+# Make the startup script executable.
+RUN chmod +x /code/run_web.dev.sh
+
+# Set the command to run when the container starts.
+# This was the missing piece that caused the container to exit immediately.
+CMD ["/code/run_web.dev.sh"]
